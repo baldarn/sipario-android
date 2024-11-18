@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/Initial">
+
+    <action
+        android:id="@+id/go_to_SiparioToggle"
+        app:destination="@id/SiparioToggle" />
+
+    <action
+        android:id="@+id/go_to_EditUser"
+        app:destination="@id/EditUser" />
+
+    <action
+        android:id="@+id/go_to_Initial"
+        app:destination="@id/Initial" />
+
+    <fragment
+        android:id="@+id/Initial"
+        android:name="it.baldarn.sipario.Initial"
+        tools:layout="@layout/fragment_initial">
+        <action
+            android:id="@+id/action_Initial_to_SignIn"
+            app:destination="@id/SignIn" />
+        <action
+            android:id="@+id/action_Initial_to_SiparioToggle"
+            app:destination="@id/SiparioToggle" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/SignIn"
+        android:name="it.baldarn.sipario.SignIn"
+        android:label="@string/sign_in_label"
+        tools:layout="@layout/fragment_sign_in">
+        <action
+            android:id="@+id/action_SignIn_to_SiparioToggle"
+            app:destination="@id/SiparioToggle" />
+
+        <action
+            android:id="@+id/action_SignIn_to_SignUp"
+            app:destination="@id/SignUp" />
+        <action
+            android:id="@+id/action_SignIn_to_ResetPassword"
+            app:destination="@id/ResetPassword" />
+    </fragment>
+    <fragment
+        android:id="@+id/SignUp"
+        android:name="it.baldarn.sipario.SignUp"
+        android:label="@string/sign_up_label"
+        tools:layout="@layout/fragment_sign_up">
+        <action
+            android:id="@+id/action_SignUp_to_SignIn"
+            app:destination="@id/SignIn" />
+    </fragment>
+    <fragment
+        android:id="@+id/SiparioToggle"
+        android:name="it.baldarn.sipario.SiparioToggle"
+        android:label="@string/sipario_toggle_label"
+        tools:layout="@layout/fragment_sipario_toggle">
+
+        <action
+            android:id="@+id/action_SiparioToggle_to_SignIn"
+            app:destination="@id/SignIn" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/ResetPassword"
+        android:name="it.baldarn.sipario.ResetPassword"
+        android:label="@string/reset_password_label"
+        tools:layout="@layout/fragment_reset_password" />
+    <fragment
+        android:id="@+id/EditUser"
+        android:name="it.baldarn.sipario.EditUser"
+        android:label="EditUser" />
+</navigation>

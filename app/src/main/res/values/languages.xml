@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="languages">
+        <item>Select a Language</item>
+        <item>Albanian</item>
+        <item>Arabic</item>
+        <item>Armenian</item>
+        <item>Awadhi</item>
+        <item>Azerbaijani</item>
+        <item>Bashkir</item>
+        <item>Basque</item>
+        <item>Belarusian</item>
+        <item>Bengali</item>
+        <item>Bhojpuri</item>
+        <item>Bosnian</item>
+        <item>Brazilian Portuguese</item>
+        <item>Bulgarian</item>
+        <item>Cantonese (Yue)</item>
+        <item>Catalan</item>
+        <item>Chhattisgarhi</item>
+        <item>Chinese</item>
+        <item>Croatian</item>
+        <item>Czech</item>
+        <item>Danish</item>
+        <item>Dogri</item>
+        <item>Dutch</item>
+        <item>English</item>
+        <item>Estonian</item>
+        <item>Faroese</item>
+        <item>Finnish</item>
+        <item>French</item>
+        <item>Galician</item>
+        <item>Georgian</item>
+        <item>German</item>
+        <item>Greek</item>
+        <item>Gujarati</item>
+        <item>Haryanvi</item>
+        <item>Hindi</item>
+        <item>Hungarian</item>
+        <item>Indonesian</item>
+        <item>Irish</item>
+        <item>Italian</item>
+        <item>Japanese</item>
+        <item>Javanese</item>
+        <item>Kannada</item>
+        <item>Kashmiri</item>
+        <item>Kazakh</item>
+        <item>Konkani</item>
+        <item>Korean</item>
+        <item>Kyrgyz</item>
+        <item>Latvian</item>
+        <item>Lithuanian</item>
+        <item>Macedonian</item>
+        <item>Maithili</item>
+        <item>Malay</item>
+        <item>Maltese</item>
+        <item>Mandarin</item>
+        <item>Mandarin Chinese</item>
+        <item>Marathi</item>
+        <item>Marwari</item>
+        <item>Min Nan</item>
+        <item>Moldovan</item>
+        <item>Mongolian</item>
+        <item>Montenegrin</item>
+        <item>Nepali</item>
+        <item>Norwegian</item>
+        <item>Oriya</item>
+        <item>Pashto</item>
+        <item>Persian (Farsi)</item>
+        <item>Polish</item>
+        <item>Portuguese</item>
+        <item>Punjabi</item>
+        <item>Rajasthani</item>
+        <item>Romanian</item>
+        <item>Russian</item>
+        <item>Sanskrit</item>
+        <item>Santali</item>
+        <item>Serbian</item>
+        <item>Sindhi</item>
+        <item>Sinhala</item>
+        <item>Slovak</item>
+        <item>Slovene</item>
+        <item>Slovenian</item>
+        <item>Spanish</item>
+        <item>Swahili</item>
+        <item>Swedish</item>
+        <item>Tajik</item>
+        <item>Tamil</item>
+        <item>Tatar</item>
+        <item>Telugu</item>
+        <item>Thai</item>
+        <item>Turkish</item>
+        <item>Turkmen</item>
+        <item>Ukrainian</item>
+        <item>Urdu</item>
+        <item>Uzbek</item>
+        <item>Vietnamese</item>
+        <item>Welsh</item>
+        <item>Wu</item>
+    </string-array>
+</resources>

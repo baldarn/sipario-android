@@ -27,12 +27,21 @@ import android.util.Log
 import android.widget.Button
 import androidx.activity.ComponentActivity
 import androidx.activity.enableEdgeToEdge
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
-import java.util.UUID
+import androidx.core.view.WindowCompat
+import androidx.navigation.NavController
+import androidx.navigation.findNavController
+import androidx.navigation.ui.AppBarConfiguration
+import androidx.navigation.ui.navigateUp
+import androidx.navigation.ui.setupActionBarWithNavController
+import com.github.kittinunf.fuel.Fuel
+import com.github.kittinunf.result.Result
+import it.baldarn.sipario.databinding.ActivityMainBinding
+import java.nio.charset.Charset
 
-
-class MainActivity : ComponentActivity() {
+class MainActivity : AppCompatActivity() {
 
     private var REQUEST_CODE_PERMISSIONS = 123
     private var PERSISTENT_SIPARIO_MODE_NOTIFICATION_ID = 1
@@ -40,10 +49,14 @@ class MainActivity : ComponentActivity() {
     private val screenEventReceiver = ScreenEventReceiver()
     private var currentRingerMode: Int? = null
 
+    private lateinit var appBarConfiguration: AppBarConfiguration
+    private lateinit var binding: ActivityMainBinding
+
     private lateinit var siparioToggleButton: Button
     private lateinit var bluetoothAdapter: BluetoothAdapter
     private lateinit var bluetoothLeScanner: BluetoothLeScanner
     private lateinit var bluetoothLeAdvertiser: BluetoothLeAdvertiser
+    lateinit var navController: NavController
 
     val notificationBuilder = NotificationCompat.Builder(this, "my_channel_id")
         .setSmallIcon(R.mipmap.ic_launcher)
@@ -56,6 +69,17 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+
+        WindowCompat.setDecorFitsSystemWindows(window, false)
+
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+        setSupportActionBar(binding.toolbar)
+
+        navController = findNavController(R.id.nav_host_fragment_content_main)
+        appBarConfiguration = AppBarConfiguration(navController.graph)
+        setupActionBarWithNavController(navController, appBarConfiguration)
+
 
         requestPermissions()
 
@@ -77,18 +101,8 @@ class MainActivity : ComponentActivity() {
         }
         registerReceiver(screenEventReceiver, filter)
 
-        setContentView(R.layout.activity_main)
-
-        siparioToggleButton = findViewById<Button>(R.id.sipario_toggle)
-
-        siparioToggleButton.setOnClickListener {
-            siparioModeOn = !siparioModeOn
-            if (siparioModeOn) {
-                siparioModeOn()
-            } else {
-                siparioModeOff()
-            }
-        }
+        navController = findNavController(R.id.nav_host_fragment_content_main)
+        navController.navigate(R.id.action_Initial_to_SignIn)
     }
 
     inner class ScreenEventReceiver : BroadcastReceiver() {
@@ -141,160 +155,31 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    private fun siparioModeOn() {
-        val isDndEnabled = getSystemService(NotificationManager::class.java).currentInterruptionFilter != NotificationManager.INTERRUPTION_FILTER_ALL
-
-        if (!isDndEnabled) {
-            val audioManager = getSystemService(Context.AUDIO_SERVICE) as AudioManager
-            currentRingerMode = audioManager.ringerMode
-            audioManager.ringerMode = AudioManager.RINGER_MODE_SILENT
-        } else {
-            // Handle DND scenario (e.g., show a message to the user)
-        }
-
-        siparioToggleButton.setText(R.string.sipario_off)
-        getSystemService(NotificationManager::class.java).notify(PERSISTENT_SIPARIO_MODE_NOTIFICATION_ID, notificationBuilder.build())
-
-        // Abilita il Bluetooth se non è già attivo
-        if (!bluetoothAdapter.isEnabled) {
-            val enableBtIntent = Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE)
-
-            if (ActivityCompat.checkSelfPermission(
-                    this,
-                    Manifest.permission.BLUETOOTH_CONNECT
-                ) != PackageManager.PERMISSION_GRANTED
-            ) {
-                // TODO: Consider calling
-                //    ActivityCompat#requestPermissions
-                // here to request the missing permissions, and then overriding
-                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                //                                          int[] grantResults)
-                // to handle the case where the user grants the permission. See the documentation
-                // for ActivityCompat#requestPermissions for more details.
-                return
-            }
-            startActivity(enableBtIntent)
-        }
-
-        startAdvertising()
-        startScanning()
+    override fun onSupportNavigateUp(): Boolean {
+        val navController = findNavController(R.id.nav_host_fragment_content_main)
+        return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
     }
 
-    private fun siparioModeOff() {
-        val isDndEnabled = getSystemService(NotificationManager::class.java).currentInterruptionFilter != NotificationManager.INTERRUPTION_FILTER_ALL
+    fun sendDeviceToken() {
+        val bearerToken = SharedPrefsHelper.getJwtToken(applicationContext)
+        val notificationToken = SharedPrefsHelper.getNotificationToken(applicationContext)
+        if (bearerToken != null && notificationToken != null) {
+            Fuel.post("${R.string.BACKEND_URL}/devices.json")
+                .header("Authorization", bearerToken)
+                .header("Content-Type" to "application/json")
+                .body(
+                    "{\"token\":\"$notificationToken\",\"platform\":\"android\"}",
+                    Charset.forName("UTF-8")
+                )
+                .response { _, _, res ->
+                    when (res) {
+                        is Result.Success -> {
+                        }
 
-        if (!isDndEnabled) {
-            if (currentRingerMode != null) {
-                val audioManager = getSystemService(Context.AUDIO_SERVICE) as AudioManager
-                audioManager.ringerMode = currentRingerMode as Int
-            }
-        } else {
-            // Handle DND scenario (e.g., show a message to the user)
-        }
-        siparioToggleButton.setText(R.string.sipario_on)
-        getSystemService(NotificationManager::class.java).cancel(PERSISTENT_SIPARIO_MODE_NOTIFICATION_ID)
-
-        if (ActivityCompat.checkSelfPermission(
-                this,
-                Manifest.permission.BLUETOOTH_SCAN
-            ) != PackageManager.PERMISSION_GRANTED
-        ) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-            return
-        }
-
-        bluetoothLeScanner.stopScan(leScanCallback)
-        bluetoothLeAdvertiser.stopAdvertising(advertiseCallback)
-    }
-
-    private val leScanCallback = object : ScanCallback() {
-        override fun onScanResult(callbackType: Int, result: ScanResult) {
-            val device: BluetoothDevice = result.device
-            // Ottieni l'ID del dispositivo remoto (ad esempio, l'indirizzo MAC)
-            val deviceId = device.address
-            // Gestisci l'ID come necessario
-            Log.d("ScanResult", "Dispositivo trovato: $deviceId")
-        }
-
-        override fun onBatchScanResults(results: List<ScanResult>) {
-            for (result in results) {
-                // Gestisci i risultati della scansione in batch
-            }
-        }
-
-        override fun onScanFailed(errorCode: Int) {
-            // Gestisci l'errore di scansione
-            Log.e("ScanFailed", "Errore di scansione: $errorCode")
-        }
-    }
-
-    private fun startScanning() {
-        bluetoothLeScanner = bluetoothAdapter.bluetoothLeScanner
-        if (ActivityCompat.checkSelfPermission(
-                this,
-                Manifest.permission.BLUETOOTH_SCAN
-            ) != PackageManager.PERMISSION_GRANTED
-        ) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-            return
-        }
-        bluetoothLeScanner.startScan(leScanCallback)
-    }
-
-    private fun startAdvertising() {
-        bluetoothLeAdvertiser = bluetoothAdapter.bluetoothLeAdvertiser
-
-        val settings = AdvertiseSettings.Builder()
-            .setAdvertiseMode(AdvertiseSettings.ADVERTISE_MODE_LOW_LATENCY)
-            .setTxPowerLevel(AdvertiseSettings.ADVERTISE_TX_POWER_HIGH)
-            .setConnectable(false)
-            .build()
-
-        val data = AdvertiseData.Builder()
-            .addServiceUuid(ParcelUuid(UUID.fromString("0000180D-0000-1000-8000-00805f9b34fb")))
-            .setIncludeDeviceName(false)
-            .build()
-
-        if (ActivityCompat.checkSelfPermission(
-                this,
-                Manifest.permission.BLUETOOTH_ADVERTISE
-            ) != PackageManager.PERMISSION_GRANTED
-        ) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-            return
-        }
-        bluetoothLeAdvertiser.startAdvertising(settings, data, advertiseCallback)
-    }
-
-    private val advertiseCallback = object : AdvertiseCallback() {
-        override fun onStartSuccess(settingsInEffect: AdvertiseSettings) {
-            super.onStartSuccess(settingsInEffect)
-            // Pubblicità iniziata con successo
-            Log.d("Advertise", "Advertising iniziato con successo")
-        }
-
-        override fun onStartFailure(errorCode: Int) {
-            super.onStartFailure(errorCode)
-            // Gestisci l'errore
-            Log.e("Advertise", "Errore nell'advertising: $errorCode")
+                        is Result.Failure -> {
+                        }
+                    }
+                }
         }
     }
 }

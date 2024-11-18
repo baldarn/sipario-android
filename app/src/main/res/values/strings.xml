@@ -2,4 +2,28 @@
     <string name="app_name">Sipario</string>
     <string name="sipario_on">Avvia modalità sipario</string>
     <string name="sipario_off">Esci dalla modalità sipario</string>
+
+    <string name="BACKEND_URL">https://sipario.org</string>
+
+    <string name="action_user">Edit user</string>
+    <string name="next">Next</string>
+    <string name="previous">Previous</string>
+    <string name="save_resolution">Save</string>
+    <string name="default_notification_channel_id">1</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="confirm_password">Confirm password</string>
+    <string name="sign_in">Sign in</string>
+    <string name="sign_up">Sign up</string>
+    <string name="sign_in_label">Sign In</string>
+    <string name="sign_up_label">Sign up</string>
+    <string name="name">Name</string>
+    <string name="language">Language</string>
+    <string name="add_resolution">Add Resolution</string>
+    <string name="reminders_list_label">Reminders</string>
+    <string name="sipario_toggle_label">Sipario</string>
+    <string name="reminder_label">Reminder</string>
+    <string name="reset_password">Reset password</string>
+    <string name="reset_password_label">Reset password</string>
+    <string name="action_logout">Logout</string>
 </resources>
