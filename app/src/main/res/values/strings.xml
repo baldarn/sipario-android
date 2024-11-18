@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Sipario</string>
+    <string name="sipario_on">Avvia modalità sipario</string>
+    <string name="sipario_off">Esci dalla modalità sipario</string>
+</resources>
