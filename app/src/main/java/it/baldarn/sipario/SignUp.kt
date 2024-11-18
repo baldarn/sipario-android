@@ -71,7 +71,7 @@ class SignUp : Fragment() {
 
             val requestBody = "{\"user\":{\"email\":\"$email\",\"password\":\"$password\",\"name\":\"$name\",\"time_zone\":\"$timeZone\"}}"
 
-            Fuel.post("${R.string.BACKEND_URL}/users.json")
+            Fuel.post("http://192.168.1.35:3000/users.json")
                 .header("Content-Type" to "application/json")
                 .body(requestBody, Charset.forName("UTF-8"))
                 .response { _, _, result ->

@@ -21,7 +21,11 @@ android {
     }
 
     buildTypes {
+        debug {
+            buildConfigField("String", "BACKEND_URL", "\"http://192.168.1.35:3000\"")
+        }
         release {
+            buildConfigField("String", "BACKEND_URL", "\"https://sipario.org\"")
             isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
@@ -38,7 +42,7 @@ android {
     }
     buildFeatures {
         compose = true
-        android.buildFeatures.buildConfig = true
+        buildConfig = true
         viewBinding = true
         dataBinding = true
     }

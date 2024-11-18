@@ -94,7 +94,7 @@ class EditUser : Fragment() {
                     "\"time_zone\":\"$timeZone\"}" +
                     "}"
 
-            Fuel.put("${R.string.BACKEND_URL}/users.json")
+            Fuel.put("${BuildConfig.BACKEND_URL}/users.json")
                 .header("Content-Type" to "application/json")
                 .body(requestBody, Charset.forName("UTF-8"))
                 .response { _, _, result ->

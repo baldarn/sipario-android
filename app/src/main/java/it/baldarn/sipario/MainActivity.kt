@@ -80,7 +80,6 @@ class MainActivity : AppCompatActivity() {
         appBarConfiguration = AppBarConfiguration(navController.graph)
         setupActionBarWithNavController(navController, appBarConfiguration)
 
-
         requestPermissions()
 
         // Ottieni l'adattatore Bluetooth
@@ -100,9 +99,6 @@ class MainActivity : AppCompatActivity() {
             addAction(Intent.ACTION_USER_PRESENT)
         }
         registerReceiver(screenEventReceiver, filter)
-
-        navController = findNavController(R.id.nav_host_fragment_content_main)
-        navController.navigate(R.id.action_Initial_to_SignIn)
     }
 
     inner class ScreenEventReceiver : BroadcastReceiver() {
@@ -164,7 +160,7 @@ class MainActivity : AppCompatActivity() {
         val bearerToken = SharedPrefsHelper.getJwtToken(applicationContext)
         val notificationToken = SharedPrefsHelper.getNotificationToken(applicationContext)
         if (bearerToken != null && notificationToken != null) {
-            Fuel.post("${R.string.BACKEND_URL}/devices.json")
+            Fuel.post("${BuildConfig.BACKEND_URL}/devices.json")
                 .header("Authorization", bearerToken)
                 .header("Content-Type" to "application/json")
                 .body(

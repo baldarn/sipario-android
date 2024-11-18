@@ -3,8 +3,6 @@
     <string name="sipario_on">Avvia modalità sipario</string>
     <string name="sipario_off">Esci dalla modalità sipario</string>
 
-    <string name="BACKEND_URL">https://sipario.org</string>
-
     <string name="action_user">Edit user</string>
     <string name="next">Next</string>
     <string name="previous">Previous</string>
