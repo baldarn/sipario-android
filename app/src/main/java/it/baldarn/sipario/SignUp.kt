@@ -44,8 +44,6 @@ class SignUp : Fragment() {
             val password = binding.signUpPasswordEditText.text.toString()
             val passwordConfirmation = binding.signUpPasswordConfirmEditText.text.toString()
 
-            val tz = TimeZone.getDefault()
-
             if(password.length < 8) {
                 Toast.makeText(
                     requireActivity(),

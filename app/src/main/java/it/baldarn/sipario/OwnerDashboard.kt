@@ -52,7 +52,7 @@ class OwnerDashboard : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.logOut.setOnClickListener { _ ->
-            SharedPrefsHelper.saveJwtToken(requireActivity().applicationContext,null)
+            SharedPrefsHelper.saveOwnerJwtToken(requireActivity().applicationContext,null)
             findNavController().navigate(R.id.action_OwnerDashboard_to_SignIn)
         }
     }
