@@ -10,10 +10,6 @@
         app:destination="@id/SiparioToggle" />
 
     <action
-        android:id="@+id/go_to_EditUser"
-        app:destination="@id/EditUser" />
-
-    <action
         android:id="@+id/go_to_Initial"
         app:destination="@id/Initial" />
 
@@ -27,6 +23,9 @@
         <action
             android:id="@+id/action_Initial_to_SiparioToggle"
             app:destination="@id/SiparioToggle" />
+        <action
+            android:id="@+id/action_Initial_to_OwnerDashboard"
+            app:destination="@id/OwnerDashboard" />
     </fragment>
 
     <fragment
@@ -37,13 +36,18 @@
         <action
             android:id="@+id/action_SignIn_to_SiparioToggle"
             app:destination="@id/SiparioToggle" />
-
+        <action
+            android:id="@+id/action_SignIn_to_OwnerDashboard"
+            app:destination="@id/OwnerDashboard" />
         <action
             android:id="@+id/action_SignIn_to_SignUp"
             app:destination="@id/SignUp" />
         <action
-            android:id="@+id/action_SignIn_to_ResetPassword"
-            app:destination="@id/ResetPassword" />
+            android:id="@+id/action_SignIn_to_SignUpOwner"
+            app:destination="@id/SignUpOwner" />
+        <action
+            android:id="@+id/action_SignIn_to_WebWiew"
+            app:destination="@id/WebView" />
     </fragment>
     <fragment
         android:id="@+id/SignUp"
@@ -63,15 +67,29 @@
         <action
             android:id="@+id/action_SiparioToggle_to_SignIn"
             app:destination="@id/SignIn" />
+        <action
+            android:id="@+id/action_SiparioToggle_to_WebView"
+            app:destination="@id/WebView" />
     </fragment>
 
     <fragment
-        android:id="@+id/ResetPassword"
-        android:name="it.baldarn.sipario.ResetPassword"
-        android:label="@string/reset_password_label"
-        tools:layout="@layout/fragment_reset_password" />
+        android:id="@+id/SignUpOwner"
+        android:name="it.baldarn.sipario.SignUpOwner"
+        android:label="@string/sign_up_owner_label"
+        tools:layout="@layout/fragment_sign_up_owner" />
+
     <fragment
-        android:id="@+id/EditUser"
-        android:name="it.baldarn.sipario.EditUser"
-        android:label="EditUser" />
+        android:id="@+id/OwnerDashboard"
+        android:name="it.baldarn.sipario.OwnerDashboard"
+        android:label="@string/owner_dashboard_label" >
+
+    <action
+        android:id="@+id/action_OwnerDashboard_to_SignIn"
+        app:destination="@id/SignIn" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/WebView"
+        android:name="it.baldarn.sipario.WebView"
+        android:label="@string/sipario" />
 </navigation>

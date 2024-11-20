@@ -17,18 +17,6 @@
             >
 
             <Button
-                android:id="@+id/sipario_toggle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/sipario_on" />
-
-            <Button
-                android:id="@+id/show_points"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/show_points" />
-
-            <Button
                 android:id="@+id/log_out"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

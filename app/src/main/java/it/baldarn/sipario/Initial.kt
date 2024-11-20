@@ -34,12 +34,16 @@ class Initial : Fragment() {
 
         waitHandler.postDelayed(Runnable {
             val jwtToken = SharedPrefsHelper.getJwtToken(requireActivity())
+            val ownerJwtToken = SharedPrefsHelper.getOwnerJwtToken(requireActivity())
             try {
-                if (jwtToken == null) {
-                    findNavController().navigate(R.id.action_Initial_to_SignIn)
+                if (ownerJwtToken != null) {
+                    findNavController().navigate(R.id.action_Initial_to_OwnerDashboard)
+                }
+                else if (jwtToken != null) {
+                    findNavController().navigate(R.id.action_Initial_to_SiparioToggle)
                     return@Runnable
                 }
-                findNavController().navigate(R.id.action_Initial_to_SiparioToggle)
+                findNavController().navigate(R.id.action_Initial_to_SignIn)
             } catch (e: Exception) {
                 // silent catch bubbu
             }

@@ -85,6 +85,16 @@ class SiparioToggle : Fragment() {
                 siparioModeOff()
             }
         }
+
+        binding.showPoints.setOnClickListener { _ ->
+            val bundle = Bundle().apply { putString("path", "${BuildConfig.BACKEND_URL}/point_events") }
+            findNavController().navigate(R.id.action_SiparioToggle_to_WebView, bundle)
+        }
+
+        binding.logOut.setOnClickListener { _ ->
+            SharedPrefsHelper.saveJwtToken(requireActivity().applicationContext,null)
+            findNavController().navigate(R.id.action_SiparioToggle_to_SignIn)
+        }
     }
 
     override fun onDestroyView() {
@@ -143,6 +153,7 @@ class SiparioToggle : Fragment() {
             // Handle DND scenario (e.g., show a message to the user)
         }
         binding.siparioToggle.setText(R.string.sipario_on)
+
         requireActivity().getSystemService(NotificationManager::class.java).cancel(PERSISTENT_SIPARIO_MODE_NOTIFICATION_ID)
 
         if (ActivityCompat.checkSelfPermission(
