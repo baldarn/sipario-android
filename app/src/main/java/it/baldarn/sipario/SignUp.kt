@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
@@ -44,10 +43,8 @@ class SignUp : Fragment() {
             val email = binding.signUpEmailEditText.text.toString()
             val password = binding.signUpPasswordEditText.text.toString()
             val passwordConfirmation = binding.signUpPasswordConfirmEditText.text.toString()
-            val name = binding.signUpNameEditText.text.toString()
 
             val tz = TimeZone.getDefault()
-            val timeZone = tz.id
 
             if(password.length < 8) {
                 Toast.makeText(
@@ -69,9 +66,9 @@ class SignUp : Fragment() {
                 return@setOnClickListener
             }
 
-            val requestBody = "{\"user\":{\"email\":\"$email\",\"password\":\"$password\",\"name\":\"$name\",\"time_zone\":\"$timeZone\"}}"
+            val requestBody = "{\"user\":{\"email\":\"$email\",\"password\":\"$password\"}}"
 
-            Fuel.post("http://192.168.1.35:3000/users.json")
+            Fuel.post("${BuildConfig.BACKEND_URL}/users.json")
                 .header("Content-Type" to "application/json")
                 .body(requestBody, Charset.forName("UTF-8"))
                 .response { _, _, result ->

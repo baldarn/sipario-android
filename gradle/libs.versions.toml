@@ -1,5 +1,6 @@
 [versions]
 agp = "8.6.1"
+fuelAndroid = "2.3.1"
 gson = "2.10.1"
 kotlin = "1.9.0"
 coreKtx = "1.13.1"
@@ -14,11 +15,15 @@ material = "1.12.0"
 activity = "1.9.3"
 constraintlayout = "2.1.4"
 navigationUiKtx = "2.8.4"
+playServicesLocation = "21.3.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 androidx-navigation-fragment-ktx = { module = "androidx.navigation:navigation-fragment-ktx", version.ref = "navigationUiKtx" }
 androidx-navigation-ui-ktx = { module = "androidx.navigation:navigation-ui-ktx", version.ref = "navigationUiKtx" }
+fuel = { module = "com.github.kittinunf.fuel:fuel", version.ref = "fuelAndroid" }
+fuel-android = { module = "com.github.kittinunf.fuel:fuel-android", version.ref = "fuelAndroid" }
+fuel-gson = { module = "com.github.kittinunf.fuel:fuel-gson", version.ref = "fuelAndroid" }
 gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
@@ -37,6 +42,7 @@ androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 androidx-activity = { group = "androidx.activity", name = "activity", version.ref = "activity" }
 androidx-constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
+play-services-location = { module = "com.google.android.gms:play-services-location", version.ref = "playServicesLocation" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

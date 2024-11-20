@@ -79,9 +79,10 @@ dependencies {
     debugImplementation(libs.androidx.ui.test.manifest)
     implementation(libs.androidx.navigation.fragment.ktx)
     implementation(libs.androidx.navigation.ui.ktx)
-    implementation("com.github.kittinunf.fuel:fuel:2.3.1")
-    implementation("com.github.kittinunf.fuel:fuel-android:2.3.1")
-    implementation("com.github.kittinunf.fuel:fuel-gson:2.3.1")
+    implementation(libs.play.services.location)
+    implementation(libs.fuel)
+    implementation(libs.fuel.android)
+    implementation(libs.fuel.gson)
     implementation(libs.gson)
 
 }
