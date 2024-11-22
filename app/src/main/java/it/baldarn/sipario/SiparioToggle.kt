@@ -234,8 +234,6 @@ class SiparioToggle : Fragment() {
 
         val timeNow = LocalDateTime.now()
 
-        sendSiparioSession()
-
         if (siparioSessionStartedAt.isAfter(timeNow.plusMinutes(providerForSession.minutesForPoints))) {
             sendSiparioSession()
         } else {
