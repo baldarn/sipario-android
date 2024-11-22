@@ -7,21 +7,29 @@ import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothManager
 import android.bluetooth.le.BluetoothLeScanner
 import android.bluetooth.le.ScanCallback
+import android.bluetooth.le.ScanFilter
 import android.bluetooth.le.ScanResult
+import android.bluetooth.le.ScanSettings
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.media.AudioManager
 import android.os.Bundle
+import android.os.ParcelUuid
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.navigation.fragment.findNavController
+import com.github.kittinunf.fuel.Fuel
+import com.github.kittinunf.result.Result
 import it.baldarn.sipario.databinding.FragmentOwnerDashboardBinding
 import it.baldarn.sipario.databinding.FragmentSignUpBinding
+import java.nio.charset.Charset
+import java.util.UUID
 
 class OwnerDashboard : Fragment() {
 
@@ -40,7 +48,8 @@ class OwnerDashboard : Fragment() {
         savedInstanceState: Bundle?
     ): View {
 
-        val bluetoothManager = requireActivity().getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
+        val bluetoothManager =
+            requireActivity().getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
         bluetoothAdapter = bluetoothManager.adapter
 
         _binding = FragmentOwnerDashboardBinding.inflate(inflater, container, false)
@@ -52,9 +61,15 @@ class OwnerDashboard : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.logOut.setOnClickListener { _ ->
-            SharedPrefsHelper.saveOwnerJwtToken(requireActivity().applicationContext,null)
+            SharedPrefsHelper.saveOwnerJwtToken(requireActivity().applicationContext, null)
             findNavController().navigate(R.id.action_OwnerDashboard_to_SignIn)
         }
+
+        binding.scanQr.setOnClickListener { _ ->
+            findNavController().navigate(R.id.action_OwnerDashboard_to_ScanQr)
+        }
+
+        startScanning()
     }
 
     override fun onDestroyView() {
@@ -62,48 +77,56 @@ class OwnerDashboard : Fragment() {
         _binding = null
     }
 
-    private fun siparioModeOn() {
-        val isDndEnabled = requireActivity().getSystemService(NotificationManager::class.java).currentInterruptionFilter != NotificationManager.INTERRUPTION_FILTER_ALL
 
-        if (!isDndEnabled) {
-            val audioManager = requireActivity().getSystemService(Context.AUDIO_SERVICE) as AudioManager
-            currentRingerMode = audioManager.ringerMode
-            audioManager.ringerMode = AudioManager.RINGER_MODE_SILENT
-        } else {
-            // Handle DND scenario (e.g., show a message to the user)
-        }
+    private val leScanCallback = object : ScanCallback() {
+        override fun onScanResult(callbackType: Int, result: ScanResult) {
+            val scanRecord = result.scanRecord
+            val serviceUuids = scanRecord?.serviceUuids
 
-        // Abilita il Bluetooth se non è già attivo
-        if (!bluetoothAdapter.isEnabled) {
-            val enableBtIntent = Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE)
+            serviceUuids?.forEach { uuid ->
+                Log.d("BLE", "Service UUID trovato: ${uuid.uuid}")
+            }
 
             if (ActivityCompat.checkSelfPermission(
                     requireActivity().applicationContext,
                     Manifest.permission.BLUETOOTH_CONNECT
                 ) != PackageManager.PERMISSION_GRANTED
             ) {
-                // TODO: Consider calling
-                //    ActivityCompat#requestPermissions
-                // here to request the missing permissions, and then overriding
-                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                //                                          int[] grantResults)
-                // to handle the case where the user grants the permission. See the documentation
-                // for ActivityCompat#requestPermissions for more details.
                 return
             }
-            startActivity(enableBtIntent)
-        }
+            val deviceId = result.device.name
 
-        startScanning()
-    }
+            val requestBody = "{\"certified_presence\":{\"device_identifier\":\"${deviceId}\"}}"
+            val bearerToken =
+                SharedPrefsHelper.getOwnerJwtToken(requireActivity().applicationContext)
 
-    private val leScanCallback = object : ScanCallback() {
-        override fun onScanResult(callbackType: Int, result: ScanResult) {
-            val device: BluetoothDevice = result.device
-            // Ottieni l'ID del dispositivo remoto (ad esempio, l'indirizzo MAC)
-            val deviceId = device.address
-            // Gestisci l'ID come necessario
-            Log.d("ScanResult", "Dispositivo trovato: $deviceId")
+            if (bearerToken != null) {
+                Fuel.post("${BuildConfig.BACKEND_URL}/certified_presences.json")
+                    .header("Content-Type" to "application/json")
+                    .header("Authorization", bearerToken)
+                    .body(requestBody, Charset.forName("UTF-8"))
+                    .response { _, response, result ->
+                        when (result) {
+                            is Result.Success -> {
+                                Toast.makeText(
+                                    requireActivity(),
+                                    "Certified presence ${deviceId}!",
+                                    Toast.LENGTH_LONG
+                                ).show()
+                            }
+
+                            is Result.Failure -> {
+                                Toast.makeText(
+                                    requireActivity(),
+                                    "ERROR",
+                                    Toast.LENGTH_LONG
+                                ).show()
+
+                            }
+                        }
+                    }
+
+            }
         }
 
         override fun onBatchScanResults(results: List<ScanResult>) {
@@ -134,6 +157,17 @@ class OwnerDashboard : Fragment() {
             // for ActivityCompat#requestPermissions for more details.
             return
         }
-        bluetoothLeScanner.startScan(leScanCallback)
+
+        val siparioUUID = ParcelUuid(UUID.fromString("c675512d-0c57-48bc-8886-a5039d513087"))
+
+        val filter = ScanFilter.Builder()
+            .setServiceUuid(siparioUUID)
+            .build()
+
+        val settings = ScanSettings.Builder()
+            .setScanMode(ScanSettings.SCAN_MODE_LOW_LATENCY)
+            .build()
+
+        bluetoothLeScanner.startScan(listOf(filter), settings, leScanCallback)
     }
 }

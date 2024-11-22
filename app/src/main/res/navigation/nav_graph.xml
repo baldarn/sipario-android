@@ -83,13 +83,26 @@
         android:name="it.baldarn.sipario.OwnerDashboard"
         android:label="@string/owner_dashboard_label" >
 
-    <action
-        android:id="@+id/action_OwnerDashboard_to_SignIn"
-        app:destination="@id/SignIn" />
+        <action
+            android:id="@+id/action_OwnerDashboard_to_SignIn"
+            app:destination="@id/SignIn" />
+        <action
+            android:id="@+id/action_OwnerDashboard_to_ScanQr"
+            app:destination="@id/QrScanner" />
     </fragment>
 
     <fragment
         android:id="@+id/WebView"
         android:name="it.baldarn.sipario.WebView"
         android:label="@string/sipario" />
+
+    <fragment
+        android:id="@+id/QrScanner"
+        android:name="it.baldarn.sipario.QRScannerFragment"
+        android:label="@string/qr_scanner_label" >
+
+        <action
+            android:id="@+id/action_ScanQr_to_OwnerDashboard"
+            app:destination="@id/OwnerDashboard" />
+    </fragment>
 </navigation>

@@ -17,10 +17,17 @@
             >
 
             <Button
+                android:id="@+id/scan_qr"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/scar_qr" />
+
+            <Button
                 android:id="@+id/log_out"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/log_out" />
+
         </LinearLayout>
 
     </androidx.core.widget.NestedScrollView>

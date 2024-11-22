@@ -9,7 +9,7 @@ android {
 
     defaultConfig {
         applicationId = "it.baldarn.sipario"
-        minSdk = 28
+        minSdk = 31
         targetSdk = 34
         versionCode = 1
         versionName = "0.0.1"
@@ -84,7 +84,6 @@ dependencies {
     implementation(libs.fuel.android)
     implementation(libs.fuel.gson)
     implementation(libs.gson)
-    implementation("dev.hotwire:core:1.0.1")
-    implementation("dev.hotwire:navigation-fragments:1.0.1")
+    implementation(libs.zxing.android.embedded)
 
 }

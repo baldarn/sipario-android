@@ -11,7 +11,6 @@ import com.github.kittinunf.fuel.Fuel
 import com.github.kittinunf.result.Result
 import it.baldarn.sipario.databinding.FragmentSignUpBinding
 import java.nio.charset.Charset
-import java.util.TimeZone
 
 /**
  * A simple [Fragment] subclass as the second destination in the navigation.

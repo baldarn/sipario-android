@@ -6,7 +6,7 @@ import android.content.SharedPreferences
 object SharedPrefsHelper {
     private const val PREFS_NAME = "siparioPrefs"
     private const val KEY_JWT_TOKEN = "jwtToken"
-    private const val KEY_OWNER_JWT_TOKEN = "ownerjwtToken"
+    private const val KEY_OWNER_JWT_TOKEN = "ownerJwtToken"
     private const val NOTIFICATION_TOKEN = "notificationToken"
 
     private fun getPrefs(context: Context): SharedPreferences {
@@ -35,6 +35,7 @@ object SharedPrefsHelper {
     fun getNotificationToken(context: Context): String? {
         return getPrefs(context).getString(NOTIFICATION_TOKEN, null)
     }
+
     fun saveNotificationToken(context: Context, token: String) {
         val editor = getPrefs(context).edit()
         editor.putString(NOTIFICATION_TOKEN, token)

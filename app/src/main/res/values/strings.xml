@@ -73,4 +73,7 @@
     <string name="show_points">Mostra punti</string>
     <string name="log_out">Esci</string>
     <string name="owner_dashboard_label">Dashboard</string>
+    <string name="qr_scanner_label">Qr Scanner</string>
+    <string name="scar_qr">Scan QR</string>
+    <string name="reset_position">Ricarica posizione GPS</string>
 </resources>
