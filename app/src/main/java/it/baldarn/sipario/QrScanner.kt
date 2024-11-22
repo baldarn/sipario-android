@@ -48,7 +48,7 @@ class QRScannerFragment : Fragment() {
                                     ).show()
 
                                     val providerId = url.split("/")[4]
-                                    val awardId = url.split("/")[5]
+                                    val awardId = url.split("/")[6]
 
                                     try {
                                         val browserIntent = Intent(
