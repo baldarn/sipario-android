@@ -7,10 +7,13 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import com.github.kittinunf.fuel.Fuel
+import com.github.kittinunf.result.Result
 import it.baldarn.sipario.databinding.FragmentQrScannerBinding
 import com.journeyapps.barcodescanner.BarcodeCallback
 import com.journeyapps.barcodescanner.BarcodeResult
@@ -24,11 +27,36 @@ class QRScannerFragment : Fragment() {
         override fun barcodeResult(result: BarcodeResult?) {
             if (result != null) {
                 Log.d("QRScanner", "Scanned QR code: ${result.text}")
-                // Mostra il risultato o esegui un'azione
-                binding.barcodeScanner.pause()
-                handleQRCode(result.text)
 
-                findNavController().navigate(R.id.action_ScanQr_to_OwnerDashboard)
+                val url = result.text
+
+                val bearerToken =
+                    SharedPrefsHelper.getOwnerJwtToken(requireActivity().applicationContext)
+                if (bearerToken != null) {
+                    Fuel.get(url)
+                        .header("Authorization", bearerToken)
+                        .header("Content-Type" to "application/json")
+                        .response { _, response, result ->
+                            when (result) {
+                                is Result.Success -> {
+                                    Toast.makeText(
+                                        requireActivity(),
+                                        "CONSUMED",
+                                        Toast.LENGTH_LONG
+                                    ).show()
+                                }
+
+                                is Result.Failure -> {
+                                    Toast.makeText(
+                                        requireActivity(),
+                                        "PROBLEMS",
+                                        Toast.LENGTH_LONG
+                                    ).show()
+                                }
+                            }
+                        }
+
+                }
             }
         }
     }
@@ -60,9 +88,11 @@ class QRScannerFragment : Fragment() {
                 // Avvia scanner
                 binding.barcodeScanner.resume()
             }
+
             shouldShowRequestPermissionRationale(Manifest.permission.CAMERA) -> {
                 // Mostra una spiegazione del perché servono i permessi
             }
+
             else -> {
                 // Richiedi i permessi
                 requestPermissionLauncher.launch(Manifest.permission.CAMERA)
@@ -78,11 +108,6 @@ class QRScannerFragment : Fragment() {
         } else {
             // Permesso negato, mostra un messaggio
         }
-    }
-
-    private fun handleQRCode(qrCode: String) {
-        // Esegui un'azione con il testo del QR code
-        Log.d("QRScanner", "QR Code Content: $qrCode")
     }
 
     override fun onDestroyView() {

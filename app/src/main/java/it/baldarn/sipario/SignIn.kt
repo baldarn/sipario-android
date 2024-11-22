@@ -107,11 +107,13 @@ class SignIn : Fragment() {
         }
 
         binding.goToSignUpButton.setOnClickListener { _ ->
-            findNavController().navigate(R.id.action_SignIn_to_SignUp)
+            val bundle = Bundle().apply { putString("path", "${BuildConfig.BACKEND_URL}/users/sign_up") }
+            findNavController().navigate(R.id.action_SignIn_to_WebWiew, bundle)
         }
 
         binding.goToSignUpOwnerButton.setOnClickListener { _ ->
-            findNavController().navigate(R.id.action_SignIn_to_SignUpOwner)
+            val bundle = Bundle().apply { putString("path", "${BuildConfig.BACKEND_URL}/owners/sign_up") }
+            findNavController().navigate(R.id.action_SignIn_to_WebWiew, bundle)
         }
 
         binding.goToResetPassword.setOnClickListener{ _ ->

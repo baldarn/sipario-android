@@ -40,23 +40,8 @@
             android:id="@+id/action_SignIn_to_OwnerDashboard"
             app:destination="@id/OwnerDashboard" />
         <action
-            android:id="@+id/action_SignIn_to_SignUp"
-            app:destination="@id/SignUp" />
-        <action
-            android:id="@+id/action_SignIn_to_SignUpOwner"
-            app:destination="@id/SignUpOwner" />
-        <action
             android:id="@+id/action_SignIn_to_WebWiew"
             app:destination="@id/WebView" />
-    </fragment>
-    <fragment
-        android:id="@+id/SignUp"
-        android:name="it.baldarn.sipario.SignUp"
-        android:label="@string/sign_up_label"
-        tools:layout="@layout/fragment_sign_up">
-        <action
-            android:id="@+id/action_SignUp_to_SignIn"
-            app:destination="@id/SignIn" />
     </fragment>
     <fragment
         android:id="@+id/SiparioToggle"
@@ -71,12 +56,6 @@
             android:id="@+id/action_SiparioToggle_to_WebView"
             app:destination="@id/WebView" />
     </fragment>
-
-    <fragment
-        android:id="@+id/SignUpOwner"
-        android:name="it.baldarn.sipario.SignUpOwner"
-        android:label="@string/sign_up_owner_label"
-        tools:layout="@layout/fragment_sign_up_owner" />
 
     <fragment
         android:id="@+id/OwnerDashboard"

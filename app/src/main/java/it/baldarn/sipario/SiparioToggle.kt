@@ -138,7 +138,6 @@ class SiparioToggle : Fragment() {
     }
 
     override fun onDestroyView() {
-        siparioModeOff()
         super.onDestroyView()
         _binding = null
     }
@@ -233,7 +232,9 @@ class SiparioToggle : Fragment() {
         bluetoothLeScanner.stopScan(leScanCallback)
         bluetoothLeAdvertiser.stopAdvertising(advertiseCallback)
 
-        var timeNow = LocalDateTime.now()
+        val timeNow = LocalDateTime.now()
+
+        sendSiparioSession()
 
         if (siparioSessionStartedAt.isAfter(timeNow.plusMinutes(providerForSession.minutesForPoints))) {
             sendSiparioSession()

@@ -108,20 +108,9 @@ class OwnerDashboard : Fragment() {
                     .response { _, response, result ->
                         when (result) {
                             is Result.Success -> {
-                                Toast.makeText(
-                                    requireActivity(),
-                                    "Certified presence ${deviceId}!",
-                                    Toast.LENGTH_LONG
-                                ).show()
                             }
 
                             is Result.Failure -> {
-                                Toast.makeText(
-                                    requireActivity(),
-                                    "ERROR",
-                                    Toast.LENGTH_LONG
-                                ).show()
-
                             }
                         }
                     }
