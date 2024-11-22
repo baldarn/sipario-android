@@ -1,5 +1,7 @@
 package it.baldarn.sipario
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -107,23 +109,43 @@ class SignIn : Fragment() {
         }
 
         binding.goToSignUpButton.setOnClickListener { _ ->
-            val bundle = Bundle().apply { putString("path", "${BuildConfig.BACKEND_URL}/users/sign_up") }
-            findNavController().navigate(R.id.action_SignIn_to_WebWiew, bundle)
+            try {
+                val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse("${BuildConfig.BACKEND_URL}/owners/sign_up"))
+                startActivity(browserIntent)
+            } catch (e: Exception) {
+                e.printStackTrace()
+                Toast.makeText(context, "Impossibile aprire il browser", Toast.LENGTH_SHORT).show()
+            }
         }
 
         binding.goToSignUpOwnerButton.setOnClickListener { _ ->
-            val bundle = Bundle().apply { putString("path", "${BuildConfig.BACKEND_URL}/owners/sign_up") }
-            findNavController().navigate(R.id.action_SignIn_to_WebWiew, bundle)
+            try {
+                val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse("${BuildConfig.BACKEND_URL}/owners/sign_up"))
+                startActivity(browserIntent)
+            } catch (e: Exception) {
+                e.printStackTrace()
+                Toast.makeText(context, "Impossibile aprire il browser", Toast.LENGTH_SHORT).show()
+            }
         }
 
         binding.goToResetPassword.setOnClickListener{ _ ->
-            val bundle = Bundle().apply { putString("path", "${BuildConfig.BACKEND_URL}/users/password/new") }
-            findNavController().navigate(R.id.action_SignIn_to_WebWiew, bundle)
+            try {
+                val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse("${BuildConfig.BACKEND_URL}/users/password/new"))
+                startActivity(browserIntent)
+            } catch (e: Exception) {
+                e.printStackTrace()
+                Toast.makeText(context, "Impossibile aprire il browser", Toast.LENGTH_SHORT).show()
+            }
         }
 
         binding.goToResetPasswordOwner.setOnClickListener{ _ ->
-            val bundle = Bundle().apply { putString("path", "${BuildConfig.BACKEND_URL}/owners/password/new") }
-            findNavController().navigate(R.id.action_SignIn_to_WebWiew, bundle)
+            try {
+                val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse("${BuildConfig.BACKEND_URL}/owners/password/new"))
+                startActivity(browserIntent)
+            } catch (e: Exception) {
+                e.printStackTrace()
+                Toast.makeText(context, "Impossibile aprire il browser", Toast.LENGTH_SHORT).show()
+            }
         }
     }
 

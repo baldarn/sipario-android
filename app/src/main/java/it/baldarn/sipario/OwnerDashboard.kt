@@ -1,9 +1,7 @@
 package it.baldarn.sipario
 
 import android.Manifest
-import android.app.NotificationManager
 import android.bluetooth.BluetoothAdapter
-import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothManager
 import android.bluetooth.le.BluetoothLeScanner
 import android.bluetooth.le.ScanCallback
@@ -11,9 +9,7 @@ import android.bluetooth.le.ScanFilter
 import android.bluetooth.le.ScanResult
 import android.bluetooth.le.ScanSettings
 import android.content.Context
-import android.content.Intent
 import android.content.pm.PackageManager
-import android.media.AudioManager
 import android.os.Bundle
 import android.os.ParcelUuid
 import android.util.Log
@@ -21,13 +17,11 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.navigation.fragment.findNavController
 import com.github.kittinunf.fuel.Fuel
 import com.github.kittinunf.result.Result
 import it.baldarn.sipario.databinding.FragmentOwnerDashboardBinding
-import it.baldarn.sipario.databinding.FragmentSignUpBinding
 import java.nio.charset.Charset
 import java.util.UUID
 
@@ -37,7 +31,6 @@ class OwnerDashboard : Fragment() {
     private lateinit var bluetoothLeScanner: BluetoothLeScanner
 
     private var _binding: FragmentOwnerDashboardBinding? = null
-    private var currentRingerMode: Int? = null
 
     // This property is only valid between onCreateView and
     // onDestroyView.

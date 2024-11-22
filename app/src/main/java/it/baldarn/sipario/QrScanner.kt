@@ -1,7 +1,9 @@
 package it.baldarn.sipario
 
 import android.Manifest
+import android.content.Intent
 import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -44,6 +46,24 @@ class QRScannerFragment : Fragment() {
                                         "CONSUMED",
                                         Toast.LENGTH_LONG
                                     ).show()
+
+                                    val providerId = url.split("/")[4]
+                                    val awardId = url.split("/")[5]
+
+                                    try {
+                                        val browserIntent = Intent(
+                                            Intent.ACTION_VIEW,
+                                            Uri.parse("${BuildConfig.BACKEND_URL}/providers/${providerId}/awards/${awardId}")
+                                        )
+                                        startActivity(browserIntent)
+                                    } catch (e: Exception) {
+                                        e.printStackTrace()
+                                        Toast.makeText(
+                                            context,
+                                            "Impossibile aprire il browser",
+                                            Toast.LENGTH_SHORT
+                                        ).show()
+                                    }
                                 }
 
                                 is Result.Failure -> {

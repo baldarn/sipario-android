@@ -3,24 +3,15 @@ package it.baldarn.sipario
 import android.Manifest
 import android.app.NotificationChannel
 import android.app.NotificationManager
-import android.bluetooth.BluetoothAdapter
-import android.bluetooth.BluetoothManager
-import android.bluetooth.le.BluetoothLeAdvertiser
-import android.bluetooth.le.BluetoothLeScanner
-import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import android.content.IntentFilter
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
-import android.util.Log
-import android.widget.Button
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
-import androidx.core.app.NotificationCompat
 import androidx.core.view.WindowCompat
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
@@ -35,7 +26,6 @@ import java.nio.charset.Charset
 class MainActivity : AppCompatActivity() {
 
     private var REQUEST_CODE_PERMISSIONS = 123
-    private val screenEventReceiver = ScreenEventReceiver()
 
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityMainBinding
@@ -64,24 +54,6 @@ class MainActivity : AppCompatActivity() {
         val channel = NotificationChannel(channelId, channelName, importance)
         val notificationManager = getSystemService(NotificationManager::class.java)
         notificationManager.createNotificationChannel(channel)
-
-        val filter = IntentFilter().apply {
-            addAction(Intent.ACTION_SCREEN_ON)
-            addAction(Intent.ACTION_SCREEN_OFF)
-            addAction(Intent.ACTION_USER_PRESENT)
-        }
-        registerReceiver(screenEventReceiver, filter)
-    }
-
-    inner class ScreenEventReceiver : BroadcastReceiver() {
-        override fun onReceive(context: Context?, intent: Intent?) {
-            when (intent?.action) {
-                Intent.ACTION_SCREEN_ON -> Log.d("ScreenEventActivity", "Schermo acceso")
-                Intent.ACTION_SCREEN_OFF -> Log.d("ScreenEventActivity", "Schermo spento")
-                Intent.ACTION_USER_PRESENT -> Log.d("ScreenEventActivity", "Dispositivo sbloccato")
-                Intent.ACTION_USER_UNLOCKED -> Log.d("ScreenEventActivity", "Sloccato")
-            }
-        }
     }
 
     private fun requestPermissions() {

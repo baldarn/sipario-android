@@ -13,11 +13,14 @@ import android.bluetooth.le.ScanCallback
 import android.bluetooth.le.ScanFilter
 import android.bluetooth.le.ScanResult
 import android.bluetooth.le.ScanSettings
+import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.content.pm.PackageManager
 import android.location.Location
 import android.media.AudioManager
+import android.net.Uri
 import android.os.Bundle
 import android.os.ParcelUuid
 import android.util.Log
@@ -27,6 +30,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
+import androidx.core.content.ContextCompat.registerReceiver
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.github.kittinunf.fuel.Fuel
@@ -56,6 +60,7 @@ class SiparioToggle : Fragment() {
 
     private var _binding: FragmentSiparioToggleBinding? = null
     private var currentRingerMode: Int? = null
+    private val screenEventReceiver = ScreenEventReceiver()
 
     private var siparioModeOn = false
     private lateinit var siparioSessionStartedAt: LocalDateTime
@@ -96,8 +101,13 @@ class SiparioToggle : Fragment() {
             // for ActivityCompat#requestPermissions for more details.
 
         }
+        val filter = IntentFilter().apply {
+            addAction(Intent.ACTION_SCREEN_OFF)
+            addAction(Intent.ACTION_USER_PRESENT)
+        }
 
-        bluetoothAdapter.setName("ShortName")
+        requireActivity().registerReceiver(screenEventReceiver, filter)
+
         fusedLocationClient =
             LocationServices.getFusedLocationProviderClient(requireActivity().applicationContext)
         getLastLocation()
@@ -113,12 +123,7 @@ class SiparioToggle : Fragment() {
         binding.siparioToggle.visibility = View.INVISIBLE
 
         binding.siparioToggle.setOnClickListener {
-            siparioModeOn = !siparioModeOn
-            if (siparioModeOn) {
-                siparioModeOn()
-            } else {
-                siparioModeOff()
-            }
+            siparioModeOn()
         }
 
         binding.resetPositionButton.setOnClickListener {
@@ -126,9 +131,13 @@ class SiparioToggle : Fragment() {
         }
 
         binding.showPoints.setOnClickListener { _ ->
-            val bundle =
-                Bundle().apply { putString("path", "${BuildConfig.BACKEND_URL}/point_events") }
-            findNavController().navigate(R.id.action_SiparioToggle_to_WebView, bundle)
+            try {
+                val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse("${BuildConfig.BACKEND_URL}/point_events"))
+                startActivity(browserIntent)
+            } catch (e: Exception) {
+                e.printStackTrace()
+                Toast.makeText(context, "Impossibile aprire il browser", Toast.LENGTH_SHORT).show()
+            }
         }
 
         binding.logOut.setOnClickListener { _ ->
@@ -143,6 +152,8 @@ class SiparioToggle : Fragment() {
     }
 
     private fun siparioModeOn() {
+        siparioModeOn = true
+
         val isDndEnabled =
             requireActivity().getSystemService(NotificationManager::class.java).currentInterruptionFilter != NotificationManager.INTERRUPTION_FILTER_ALL
 
@@ -183,15 +194,14 @@ class SiparioToggle : Fragment() {
 
         providerForSession = providers.first()
 
+        binding.siparioToggle.visibility = View.INVISIBLE
         binding.resetPositionButton.visibility = View.INVISIBLE
         binding.showPoints.visibility = View.INVISIBLE
         binding.logOut.visibility = View.INVISIBLE
 
-        siparioSessionStartedAt = LocalDateTime.now()
-
         Toast.makeText(
             requireActivity(),
-            "You will need to keep the sipario session on for ${providerForSession.minutesForPoints} minutes!",
+            "Put away yout device for ${providerForSession.minutesForPoints} minutes!",
             Toast.LENGTH_LONG
         ).show()
 
@@ -200,6 +210,8 @@ class SiparioToggle : Fragment() {
     }
 
     private fun siparioModeOff() {
+        siparioModeOn = false
+
         val isDndEnabled =
             requireActivity().getSystemService(NotificationManager::class.java).currentInterruptionFilter != NotificationManager.INTERRUPTION_FILTER_ALL
 
@@ -225,6 +237,7 @@ class SiparioToggle : Fragment() {
             return
         }
 
+        binding.siparioToggle.visibility = View.VISIBLE
         binding.resetPositionButton.visibility = View.VISIBLE
         binding.showPoints.visibility = View.VISIBLE
         binding.logOut.visibility = View.VISIBLE
@@ -234,7 +247,12 @@ class SiparioToggle : Fragment() {
 
         val timeNow = LocalDateTime.now()
 
-        if (siparioSessionStartedAt.isAfter(timeNow.plusMinutes(providerForSession.minutesForPoints))) {
+        if (siparioSessionStartedAt != null && timeNow.isAfter(
+                siparioSessionStartedAt.plusMinutes(
+                    providerForSession.minutesForPoints
+                )
+            )
+        ) {
             sendSiparioSession()
         } else {
             Toast.makeText(
@@ -386,6 +404,22 @@ class SiparioToggle : Fragment() {
                     }
                 }
             }
+    }
+
+    inner class ScreenEventReceiver : BroadcastReceiver() {
+        override fun onReceive(context: Context?, intent: Intent?) {
+            when (intent?.action) {
+                Intent.ACTION_SCREEN_OFF -> {
+                    siparioSessionStartedAt = LocalDateTime.now()
+                }
+
+                Intent.ACTION_USER_PRESENT -> {
+                    if (siparioModeOn) {
+                        siparioModeOff()
+                    }
+                }
+            }
+        }
     }
 
 

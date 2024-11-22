@@ -45,7 +45,7 @@ class Initial : Fragment() {
                 }
                 findNavController().navigate(R.id.action_Initial_to_SignIn)
             } catch (e: Exception) {
-                // silent catch bubbu
+                findNavController().navigate(R.id.action_Initial_to_SignIn)
             }
         }, 1500)
     }

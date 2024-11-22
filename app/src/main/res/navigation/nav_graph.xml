@@ -39,9 +39,6 @@
         <action
             android:id="@+id/action_SignIn_to_OwnerDashboard"
             app:destination="@id/OwnerDashboard" />
-        <action
-            android:id="@+id/action_SignIn_to_WebWiew"
-            app:destination="@id/WebView" />
     </fragment>
     <fragment
         android:id="@+id/SiparioToggle"
@@ -52,9 +49,6 @@
         <action
             android:id="@+id/action_SiparioToggle_to_SignIn"
             app:destination="@id/SignIn" />
-        <action
-            android:id="@+id/action_SiparioToggle_to_WebView"
-            app:destination="@id/WebView" />
     </fragment>
 
     <fragment
@@ -69,11 +63,6 @@
             android:id="@+id/action_OwnerDashboard_to_ScanQr"
             app:destination="@id/QrScanner" />
     </fragment>
-
-    <fragment
-        android:id="@+id/WebView"
-        android:name="it.baldarn.sipario.WebView"
-        android:label="@string/sipario" />
 
     <fragment
         android:id="@+id/QrScanner"
